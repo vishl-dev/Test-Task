@@ -11,46 +11,55 @@ class ComponentType(DjangoObjectType):
 
 # Fetch All Components API
 class Query(graphene.ObjectType):
-    tasks = graphene.List(ComponentType)
+    try:
+        tasks = graphene.List(ComponentType)
 
-    def resolve_tasks(root, info, **kwargs):
-        return Component.objects.all()
+        def resolve_tasks(root, info, **kwargs):
+            return Component.objects.all()
+    except:
+        pass
 
 
 # Create API
 class CreateComponent(graphene.Mutation):
-    class Arguments:
-        name = graphene.String(required=True)
-        status = graphene.String(required=True)
+    try:
+        class Arguments:
+            name = graphene.String(required=True)
+            status = graphene.String(required=True)
 
-    task = graphene.Field(ComponentType)
+        task = graphene.Field(ComponentType)
 
-    @classmethod
-    def mutate(cls, root, info, name, status):
-        task = Component()
-        task.name = name
-        task.status = status
-        task.save()
-        
-        return CreateComponent(task=task)
+        @classmethod
+        def mutate(cls, root, info, name, status):
+            task = Component()
+            task.name = name
+            task.status = status
+            task.save()
+            
+            return CreateComponent(task=task)
+    except:
+        pass
 
 
 # Update API   
 class UpdatePost(graphene.Mutation):
-    class Arguments:
-        id = graphene.ID()
-        name = graphene.String(required=True)
-        status = graphene.String(required=True)
+    try:
+        class Arguments:
+            id = graphene.ID()
+            name = graphene.String(required=True)
+            status = graphene.String(required=True)
 
-    post = graphene.Field(ComponentType)
-   
-    @classmethod
-    def mutate(cls, self, info, id, name, status):
-        post = Component.objects.get(id=id)
-        post.name = name
-        post.status = status
-        post.save()
-        return UpdatePost(post=post)
+        post = graphene.Field(ComponentType)
+    
+        @classmethod
+        def mutate(cls, self, info, id, name, status):
+            post = Component.objects.get(id=id)
+            post.name = name
+            post.status = status
+            post.save()
+            return UpdatePost(post=post)
+    except:
+        pass
 
 
 class Mutation(graphene.ObjectType):
@@ -60,45 +69,54 @@ class Mutation(graphene.ObjectType):
 
 # Delete API
 class DeleteComponent(graphene.Mutation):
-    class Arguments:
-        id = graphene.ID()
+    try:
+        class Arguments:
+            id = graphene.ID()
 
-    task = graphene.Field(ComponentType)
+        task = graphene.Field(ComponentType)
 
-    @staticmethod
-    def mutate(root, info, id):
-        task_instance = Component.objects.get(pk=id)
-        task_instance.delete()
+        @staticmethod
+        def mutate(root, info, id):
+            task_instance = Component.objects.get(pk=id)
+            task_instance.delete()
 
-        return Component.objects.all()
+            return Component.objects.all()
+    except:
+        pass
 
 
 # Change Status
 class ChangeStatus(graphene.Mutation):
-    class Arguments:
-        id = graphene.ID()
-        status = graphene.String(required=True)
- 
-    post = graphene.Field(ComponentType)
-   
-    @classmethod
-    def mutate(cls, self, info, id, status):
-        post = Component.objects.get(id=id)
-        post.status = status
-        post.save()
-        return UpdatePost(post=post)
+    try:
+        class Arguments:
+            id = graphene.ID()
+            status = graphene.String(required=True)
+    
+        post = graphene.Field(ComponentType)
+    
+        @classmethod
+        def mutate(cls, self, info, id, status):
+            post = Component.objects.get(id=id)
+            post.status = status
+            post.save()
+            return UpdatePost(post=post)
+    except:
+        pass
 
 
 # Bulk Delete API
 class BulkDeleteMutation(graphene.Mutation):
-    class Arguments:
-        ids = graphene.List(graphene.ID, required=True)
-    
-    success = graphene.Boolean()
-    def mutate(self, info, ids):
-        queryset = Component.objects.filter(id__in=ids)
-        queryset.delete()
-        return BulkDeleteMutation(success=True)
+    try:
+        class Arguments:
+            ids = graphene.List(graphene.ID, required=True)
+        
+        success = graphene.Boolean()
+        def mutate(self, info, ids):
+            queryset = Component.objects.filter(id__in=ids)
+            queryset.delete()
+            return BulkDeleteMutation(success=True)
+    except:
+        pass
 
 
 # Register Mutation
